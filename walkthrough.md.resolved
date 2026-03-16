@@ -1,0 +1,47 @@
+# Walkthrough - Enhanced Gemini Accuracy Comparison
+
+I have successfully updated the Gemini comparison CSV to include detailed breakdown columns for terms that were **Maintained**, **Added**, or **Removed** by the LLM across both Set 1 and Set 2.
+
+## Changes Made
+
+### 1. New Processing Script
+Created [step3_accuracy_with_maintained_added_removed.py](file:///c:/Users/fms39/OneDrive/Desktop/LLM%20Auditing/llm-as-ontology-server/scripts/step3_accuracy_with_maintained_added_removed.py) to regenerate the comparison results with the requested analytical columns.
+
+### 2. Enhanced CSV Output
+The final CSV [comparison_set1_set2_vs_ground_truth.csv](file:///c:/Users/fms39/OneDrive/Desktop/LLM%20Auditing/llm-as-ontology-server/output/gemini/run_002/step3_accuracy/comparison_set1_set2_vs_ground_truth.csv) now contains **59 columns**.
+
+For each ontology label (parents, grandparents, children, siblings) and each test set (1 and 2), I added three pipe-delimited columns:
+- `{set}_{label}_maintained`: Terms found in both ground truth and LLM output.
+- `{set}_{label}_added`: Terms the LLM "hallucinated" or added that are not in ground truth.
+- `{set}_{label}_removed`: Terms from the ground truth that the LLM missed.
+
+**Example Column Group:**
+- `set1_parents` (Original raw output)
+- `set1_parents_maintained` (New)
+- `set1_parents_added` (New)
+- `set1_parents_removed` (New)
+- `set1_parents_exact` (Accuracy metric)
+
+## Verification Results
+
+### Automated Validation
+I ran a comprehensive verification script that checked all 400 concepts and all 24 new columns for set-theoretic consistency:
+- **Maintained ∪ Removed = Ground Truth** (No missing data from SNOMED-CT)
+- **Maintained ∪ Added = LLM Prediction** (No missing data from LLM response)
+- **No Overlap** between Added and Removed sets.
+
+> [!NOTE]
+> Comparison is performed using normalized terms (lowercase, semantic tags removed, whitespace stripped) to ensure accuracy even if punctuation or casing differs between SNOMED-CT and Gemini.
+
+### Final Accuracy Summary
+The script also calculates the average accuracy across all concepts:
+
+| Metric | Set 1 (Recall %) | Set 2 (Recall %) |
+| :--- | :--- | :--- |
+| **Parents** | 35.84% | 31.91% |
+| **Grandparents** | 12.83% | 12.56% |
+| **Children** | 10.13% | 8.86% |
+| **Siblings** | 0.99% | 0.32% |
+| **Overall** | **14.95%** | **13.41%** |
+
+*Note: Percentages represent exact-match recall.*
