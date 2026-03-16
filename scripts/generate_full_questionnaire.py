@@ -18,7 +18,9 @@ def main():
     # Validation options to be used in the form
     options = "Valid (Clinical) | Valid (Synonym) | Error (Incorrect) | Error (Irrelevant)"
 
-    for _, row in df.iterrows():
+    for index, row in df.iterrows():
+        if index >= 50:
+            break
         concept = row['concept_name']
         
         # Check all 4 categories across both sets
